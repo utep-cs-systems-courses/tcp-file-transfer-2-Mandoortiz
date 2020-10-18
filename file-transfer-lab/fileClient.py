@@ -8,7 +8,6 @@ import params
 
 from framedSock import framedSend, framedReceive
 
-
 switchesVarDefaults = (
     (('-s', '--server'), 'server', "127.0.0.1:50001"),
     (('-d', '--debug'), "debug", False), # boolean (set if present)
@@ -43,14 +42,17 @@ if s is None:
     sys.exit(1)
 
 s.connect(addrPort)
-while True:
+while True:                                       
     try:
-        filename = input("Enter name of file")
-        #filename = "testfile.txt"
-        file = open(filename,"r")
-        break
+        file_name = input("Enter name of file: ")
+        file_in = open(file_name,"r")             
+        file_in = file_in.read()                  
+        if(len(file_in) == 0):                    
+            print("Error: File is empty.")
+            sys.exit(1)
+        else:
+            break            
     except FileNotFoundError:
         print("Error: File Not Found")
-    
-print("sending ", filename)
-framedSend(s, (filename+"%^&"+file.read()).encode(), debug)
+print("sending ", file_name)
+framedSend(s, (file_name+"%^&"+file_in).encode(), debug)
