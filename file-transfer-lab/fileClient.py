@@ -44,7 +44,8 @@ if s is None:
 s.connect(addrPort)
 while True:
     file_name = input("Enter name of file: ")
-    if(len(file_name) == 0):
+    file_name = file_name.strip()
+    if(len(file_name) == 0 or file_name.lower() == "exit"):
         # Allow for user to exit if they want to
         print("Goodbye")
         sys.exit(0)
@@ -55,8 +56,9 @@ while True:
         if(len(file_contents) == 0):
             # Check that file is not a zero length file
             print("Error: File is empty.")
-            sys.exit(1)
+            continue
         print("sending ", file_name)
         framedSend(s, file_name, file_contents, debug)
     except FileNotFoundError:
-        print("Error: File Not Found")
+        print("Error: File Not Found.")
+        sys.exit(1)
