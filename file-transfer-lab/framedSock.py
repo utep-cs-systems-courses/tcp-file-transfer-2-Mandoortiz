@@ -1,8 +1,8 @@
 import re
 
-def framedSend(sock, payload, debug=0):
+def framedSend(sock, file_name, payload, debug=0):
      if debug: print("framedSend: sending %d byte message" % len(payload))
-     msg = str(len(payload)).encode() + b':' + payload
+     msg = str(len(payload)).encode() + b':' + file_name.encode() + b':'+ payload
      while len(msg):
          nsent = sock.send(msg)
          msg = msg[nsent:]
@@ -15,21 +15,21 @@ def framedReceive(sock, debug=0):
     msgLength = -1
     while True:
          if (state == "getLength"):
-             match = re.match(b'([^:]+):(.*)', rbuf, re.DOTALL | re.MULTILINE) # look for colon
+             match = re.match(b'([^:]+):(.*):(.*)', rbuf, re.DOTALL | re.MULTILINE) # look for colon
              if match:
-                  lengthStr, rbuf = match.groups()
+                  lengthStr, filename, rbuf = match.groups()
                   try: 
                        msgLength = int(lengthStr)
                   except:
                        if len(rbuf):
                             print("badly formed message length:", lengthStr)
-                            return None
+                            return None, None
                   state = "getPayload"
          if state == "getPayload":
              if len(rbuf) >= msgLength:
                  payload = rbuf[0:msgLength]
                  rbuf = rbuf[msgLength:]
-                 return payload
+                 return filename, payload
          r = sock.recv(100)
          rbuf += r
          if len(r) == 0:
