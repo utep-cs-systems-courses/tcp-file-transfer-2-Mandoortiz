@@ -49,7 +49,7 @@ fsock = EncapFramedSock((sock, addrPort))
 while True:
     file_name = input("Enter name of file: ")
     file_name = file_name.strip()
-    if(len(file_name) == 0 or file_name.lower() == "exit"):
+    if len(file_name) == 0 or file_name.lower() == "exit":
         # Allow for user to exit if they want to
         print("Goodbye")
         sys.exit(0)
@@ -57,7 +57,7 @@ while True:
         # Check that file exists
         file_in = open(file_name,"rb")             
         file_contents = file_in.read()                  
-        if(len(file_contents) == 0):
+        if len(file_contents) == 0:
             # Check that file is not a zero length file
             print("Error: File is empty.")
             continue
